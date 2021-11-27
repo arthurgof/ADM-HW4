@@ -1,6 +1,8 @@
 import numpy as np
 import random
 
+from numpy.core.arrayprint import DatetimeFormat
+
 class kmean:
     def __init__(self, data) -> None:
         self.data = self.normalize(np.array(data))
@@ -11,16 +13,18 @@ class kmean:
         norm = np.linalg.norm(data)
         if norm == 0: 
            return data
-        return data / norm
+        return data
 
     def giveVAlue(self, data):
         self.data = data
     
     def initalizeRandom(self, kn):
         self.point = np.random.random((kn, len(self.data[0])))
-    
+        for i in range(len(self.data[0])):
+            self.point[:,i] = self.point[:,i] * np.max(self.data[:,i])
+
     def assignk(self, first):
-        va = True
+        va = False
         for i in range(len(self.data)):
             pt = np.array(self.data[i])
             if first:
@@ -30,9 +34,10 @@ class kmean:
             for y in range(len(self.point)):
                 k = self.point[y]
                 if np.linalg.norm(k - pt) < min:
-                    va = False
-                    min = np.linalg.norm(k - pt)
-                    self.assig[i] = y
+                    if self.assig[i] != y:
+                        va = True
+                        min = np.linalg.norm(k - pt)
+                        self.assig[i] = y
         return va
 
 
@@ -52,4 +57,5 @@ class kmean:
                 if num > 0:
                     self.point[i] = sum/num
             move = self.assignk(False)
-            print(self.assig)
+
+
