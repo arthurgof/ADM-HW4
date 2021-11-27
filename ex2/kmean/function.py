@@ -1,7 +1,5 @@
 import numpy as np
-import random
-
-from numpy.core.arrayprint import DatetimeFormat
+import sys
 
 class kmean:
     def __init__(self, data) -> None:
@@ -23,21 +21,20 @@ class kmean:
         for i in range(len(self.data[0])):
             self.point[:,i] = self.point[:,i] * np.max(self.data[:,i])
 
-    def assignk(self, first):
+    def assignk(self, first, data):
         va = False
-        for i in range(len(self.data)):
-            pt = np.array(self.data[i])
+        for i in range(len(data)):
+            pt = np.array(data[i])
             if first:
-                min = 2
+                min = sys.maxsize
             else:
                 min = np.linalg.norm(self.point[self.assig[i]] - pt)
             for y in range(len(self.point)):
                 k = self.point[y]
                 if np.linalg.norm(k - pt) < min:
-                    if self.assig[i] != y:
-                        va = True
-                        min = np.linalg.norm(k - pt)
-                        self.assig[i] = y
+                    va = True
+                    min = np.linalg.norm(k - pt)
+                    self.assig[i] = y
         return va
 
 
@@ -45,7 +42,7 @@ class kmean:
         self.initalizeRandom(kn)
         move = True
         self.assig = np.zeros((len(self.data)), int)
-        self.assignk(True)
+        self.assignk(True, self.data)
         while move:
             for i in range(len(self.point)):
                 sum = np.zeros((len(self.data[0])))
@@ -56,6 +53,13 @@ class kmean:
                         num += 1
                 if num > 0:
                     self.point[i] = sum/num
-            move = self.assignk(False)
+            move = self.assignk(False, self.data)
+        return self.assig
 
+
+    def predic(self, data):
+        data = np.array(data)
+        self.assig = np.zeros((len(data)), int)
+        self.assignk(True, data)
+        return self.assig
 
