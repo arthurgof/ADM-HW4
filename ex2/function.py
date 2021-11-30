@@ -1,5 +1,6 @@
 import numpy as np
 import sys
+import math
 
 class kmean:
     def __init__(self, data) -> None:
@@ -11,7 +12,7 @@ class kmean:
         norm = np.linalg.norm(data)
         if norm == 0: 
            return data
-        return data
+        return data/norm
 
     def giveVAlue(self, data):
         self.data = data
@@ -19,7 +20,8 @@ class kmean:
     def initalizeRandom(self, kn):
         self.point = np.random.random((kn, len(self.data[0])))
         for i in range(len(self.data[0])):
-            self.point[:,i] = self.point[:,i] * np.max(self.data[:,i])
+            if not math.isnan(np.max(self.data[:,i])):
+                self.point[:,i] = self.point[:,i] * np.max(self.data[:,i])
 
     def assignk(self, first, data):
         va = False
@@ -49,8 +51,9 @@ class kmean:
                 num = 0
                 for y in range(len(self.assig)):
                     if i == self.assig[y]:
-                        sum += self.data[y]
-                        num += 1
+                        if(not math.isnan(np.sum(self.data[y]))):
+                            sum += self.data[y]
+                            num += 1
                 if num > 0:
                     self.point[i] = sum/num
             move = self.assignk(False, self.data)
@@ -62,4 +65,3 @@ class kmean:
         self.assig = np.zeros((len(data)), int)
         self.assignk(True, data)
         return self.assig
-
