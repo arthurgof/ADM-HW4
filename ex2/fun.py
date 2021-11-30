@@ -1,4 +1,4 @@
-import csv
+import os
 import requests
 import re
 
@@ -9,9 +9,10 @@ def downloadcsv():
             'https://sapienza2021adm.s3.eu-south-1.amazonaws.com/hw4/tracks.csv']
     for url in urls:
         response = requests.get(url)
-        with open('data/csv/'+re.findall(reg, url)[0][4:], 'w') as f:
-            writer = csv.writer(f)
-            for line in response.iter_lines():
-                writer.writerow(line.decode('utf-8').split(','))
+        url_content = response.content
+        os.walk('../data/csv/')
+        csv_f = open('../data/csv/'+re.findall(reg, url)[0][4:], 'wb')
+        csv_f.write(url_content)
+        csv_f.close()
 if __name__ == "__main__":
     downloadcsv()
