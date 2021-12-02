@@ -4,7 +4,7 @@ import math
 
 class kmean:
     def __init__(self, data) -> None:
-        self.data = self.normalize(np.array(data))
+        self.data = np.array(data)
         self.p1set = []
         self.p2set = []
     
@@ -20,8 +20,7 @@ class kmean:
     def initalizeRandom(self, kn):
         self.point = np.random.random((kn, len(self.data[0])))
         for i in range(len(self.data[0])):
-            if not math.isnan(np.max(self.data[:,i])):
-                self.point[:,i] = self.point[:,i] * np.max(self.data[:,i])
+            self.point[:,i] = (self.point[:,i] * (np.max(self.data[:,i]))-np.min(self.data[:,i])) + np.min(self.data[:,i])
 
     def assignk(self, first, data):
         va = False
