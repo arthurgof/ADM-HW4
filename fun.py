@@ -10,7 +10,7 @@ def downloadcsv():
     for url in urls:
         response = requests.get(url)
         url_content = response.content
-        os.walk('../data/csv/')
-        csv_f = open('../data/csv/'+re.findall(reg, url)[0][4:], 'wb')
+        os.walk('data/csv/')
+        csv_f = open('data/csv/'+re.findall(reg, url)[0][4:], 'wb')
         csv_f.write(url_content)
         csv_f.close()
